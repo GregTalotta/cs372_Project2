@@ -16,20 +16,91 @@ public:
   virtual double getWidth() const = 0;
   virtual void generatePostScript(std::ostream &os) const = 0;
 };
+class Circle: public Shape {
+public:
+    Circle(double);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override ;
+};
+class Polygon: public Shape {
+public:
+    Polygon(int, double);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override;
+};
+class Rectangle: public Shape {
+public:
+    Rectangle(double, double);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override;
+};
+class Spacer: public Shape {
+public:
+    Spacer(double, double);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override;
+};
+class Square: public Shape {
+public:
+    Square(double);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override;
+};
+class Triangle: public Shape{
+public:
+    Triangle(double);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override;
+};
+enum class Angle {R90,R180,R270};
+class Rotated: public Shape{
+public:
+    Rotated(Shape, Angle);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override;
+};
+class Scaled: public Shape{
+public:
+    Scaled(Shape, double, double);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override;
+};
+class Layered: public Shape{
+public:
+    Layered(std::initializer_list<std::shared_ptr<Shape>>);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override;
+};
+class Vertical: public Shape{
+public:
+    Vertical(std::initializer_list<std::shared_ptr<Shape>>);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override;
+};
+class Horizontal: public Shape{
+public:
+    Horizontal(std::initializer_list<std::shared_ptr<Shape>>);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override;
+};
 
 std::shared_ptr<Shape> makeCircle(double radius);
-/* implementation might look like this
- * {
- * return make_shared<Circle>(13.13);
- * }
-*/
-
 std::shared_ptr<Shape> makePolygon(int numSides, double length);
 std::shared_ptr<Shape> makeRectangle(double width, double height);
 std::shared_ptr<Shape> makeSpacer(double width, double height);
 std::shared_ptr<Shape> makeSquare(double length);
 std::shared_ptr<Shape> makeTriangle(double length);
-enum class Angle {R90,R180,R270};
 std::shared_ptr<Shape> makeRotatedShape(std::shared_ptr<Shape> s, Angle a);
 // auto r = RotatedShape(s,Angle::R90);
 std::shared_ptr<Shape> makeScaledShape(std::shared_ptr<Shape> s, double sx, double sy);
