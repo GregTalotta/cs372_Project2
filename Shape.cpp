@@ -5,7 +5,10 @@
 #include "Shape.hpp"
 
 //Circle definitions
-Circle::Circle(double radius){}
+Circle::Circle(double radius){
+    _height = 2 * radius;
+    _width = 2 * radius;
+}
 double Circle::getHeight() const { return _height; }
 double Circle::getWidth() const { return _width; }
 void Circle::generatePostScript(std::ostream &os) const {}
@@ -17,19 +20,26 @@ double Polygon::getWidth() const { return _width; }
 void Polygon::generatePostScript(std::ostream &os) const {}
 
 //Rectangle definitions
-Rectangle::Rectangle(double width, double height) {}
+Rectangle::Rectangle(double width, double height) {
+    _height = height;
+    _width = width;
+}
 double Rectangle::getHeight() const { return _height; }
 double Rectangle::getWidth() const { return _width; }
 void Rectangle::generatePostScript(std::ostream &os) const {}
 
 //Spacer definitions
-Spacer::Spacer(double width, double height){}
+Spacer::Spacer(double width, double height){
+    _height = height;
+    _width = width;}
 double Spacer::getHeight() const { return _height; }
 double Spacer::getWidth() const { return _width; }
 void Spacer::generatePostScript(std::ostream &os) const {}
 
 //Square definitions
-Square::Square(double sideLength){}
+Square::Square(double sideLength){
+    _height = sideLength;
+    _width = sideLength;}
 double Square::getHeight() const { return _height; }
 double Square::getWidth() const { return _width; }
 void Square::generatePostScript(std::ostream &os) const {}
