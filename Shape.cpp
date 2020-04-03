@@ -4,49 +4,74 @@
 
 #include "Shape.hpp"
 
+//Circle definitions
+Circle::Circle(double radius){}
+double Circle::getHeight() const { return 0; }
+double Circle::getWidth() const { return 0; }
+void Circle::generatePostScript(std::ostream &os) const {}
 
-std::shared_ptr<Shape> makeCircle(double radius){
-    return std::make_shared<Circle>(Circle(radius));
-}
+//Polygon definitions
+Polygon::Polygon(int numSides, double sideLength){}
+double Polygon::getHeight() const { return 0; }
+double Polygon::getWidth() const {return 0;}
+void Polygon::generatePostScript(std::ostream &os) const {}
 
-std::shared_ptr<Shape> makePolygon(int numSides, double length){
+//Rectangle definitions
+Rectangle::Rectangle(double width, double height) {}
+double Rectangle::getHeight() const {return 0;}
+double Rectangle::getWidth() const {return 0;}
+void Rectangle::generatePostScript(std::ostream &os) const {}
 
-}
+//Spacer definitions
+Spacer::Spacer(double width, double height){}
+double Spacer::getHeight() const {return 0;}
+double Spacer::getWidth() const {return 0;}
+void Spacer::generatePostScript(std::ostream &os) const {}
 
-std::shared_ptr<Shape> makeRectangle(double width, double height){
+//Square definitions
+Square::Square(double sideLength){}
+double Square::getHeight() const {return 0;}
+double Square::getWidth() const {return 0;}
+void Square::generatePostScript(std::ostream &os) const {}
 
-}
+//Triangle definitions
+Triangle::Triangle(double sideLength){}
+double Triangle::getHeight() const {return 0;}
+double Triangle::getWidth() const {return 0;}
+void Triangle::generatePostScript(std::ostream &os) const {}
 
-std::shared_ptr<Shape> makeSpacer(double width, double height){
+//Rotated definitions
+Rotated::Rotated(std::shared_ptr<Shape> & shape, Angle rotationAngle) {}
+double Rotated::getHeight() const {return 0;}
+double Rotated::getWidth() const {return 0;}
+void Rotated::generatePostScript(std::ostream &os) const {}
 
-}
+//Scaled definitions
+Scaled::Scaled(std::shared_ptr<Shape> & shape, double fx, double fy){}
+double Scaled::getHeight() const {return 0;}
+double Scaled::getWidth() const {return 0;}
+void Scaled::generatePostScript(std::ostream &os) const {}
 
-std::shared_ptr<Shape> makeSquare(double length){
+//Layered definitions
+Layered::Layered(std::initializer_list<std::shared_ptr<Shape>> shapes){}
+double Layered::getHeight() const {return 0;}
+double Layered::getWidth() const {return 0;}
+void Layered::generatePostScript(std::ostream &os) const {}
 
-}
+//Vertical definitions
+Vertical::Vertical(std::initializer_list<std::shared_ptr<Shape>> shapes){}
+double Vertical::getHeight() const {return 0;}
+double Vertical::getWidth() const {return 0;}
+void Vertical::generatePostScript(std::ostream &os) const {}
 
-std::shared_ptr<Shape> makeTriangle(double length){
+//Horizontal definitions
+Horizontal::Horizontal(std::initializer_list<std::shared_ptr<Shape>> shapes){}
+double Horizontal::getHeight() const {return 0;}
+double Horizontal::getWidth() const {return 0;}
+void Horizontal::generatePostScript(std::ostream &os) const {}
 
-}
-
-std::shared_ptr<Shape> makeRotatedShape(std::shared_ptr<Shape> s, Angle a){
-
-}
-
-std::shared_ptr<Shape> makeScaledShape(std::shared_ptr<Shape> s, double sx, double sy){
-
-}
-
-std::shared_ptr<Shape> makeLayeredShape(std::initializer_list<Shape> i){
-
-}
-
-std::shared_ptr<Shape> makeVerticalShape(std::initializer_list<Shape> i){
-
-}
-
-std::shared_ptr<Shape> makeHorizontalShape(std::initializer_list<Shape> i){
-
-}
-
-
+//Special definitions
+Special::Special(/*not sure what is required*/){}
+double Special::getHeight() const { return 0; }
+double Special::getWidth() const { return 0; }
+void Special::generatePostScript(std::ostream &os) const {}

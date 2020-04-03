@@ -10,6 +10,9 @@
 #include <memory>
 
 class Shape {
+protected:
+    double _width;     // width of bounding box
+    double _height;    // height of bounding box
 public:
   virtual ~Shape() = default;
   virtual double getHeight() const = 0;
@@ -18,10 +21,10 @@ public:
 };
 class Circle: public Shape {
 public:
-    Circle(double);
+    explicit Circle(double);
     double getHeight() const override;
     double getWidth() const override;
-    void generatePostScript(std::ostream &os) const override ;
+    void generatePostScript(std::ostream &os) const override;
 };
 class Polygon: public Shape {
 public:
@@ -46,14 +49,14 @@ public:
 };
 class Square: public Shape {
 public:
-    Square(double);
+    explicit Square(double);
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
 };
 class Triangle: public Shape{
 public:
-    Triangle(double);
+    explicit Triangle(double);
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
@@ -61,14 +64,14 @@ public:
 enum class Angle {R90,R180,R270};
 class Rotated: public Shape{
 public:
-    Rotated(Shape, Angle);
+    Rotated(std::shared_ptr<Shape> &, Angle);
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
 };
 class Scaled: public Shape{
 public:
-    Scaled(Shape, double, double);
+    Scaled(std::shared_ptr<Shape> &, double, double);
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
@@ -94,19 +97,26 @@ public:
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
 };
+class Special: public Shape{
+public:
+    Special(/*not sure what is required*/);
+    double getHeight() const override;
+    double getWidth() const override;
+    void generatePostScript(std::ostream &os) const override;
+};
 
-std::shared_ptr<Shape> makeCircle(double radius);
-std::shared_ptr<Shape> makePolygon(int numSides, double length);
-std::shared_ptr<Shape> makeRectangle(double width, double height);
-std::shared_ptr<Shape> makeSpacer(double width, double height);
-std::shared_ptr<Shape> makeSquare(double length);
-std::shared_ptr<Shape> makeTriangle(double length);
-std::shared_ptr<Shape> makeRotatedShape(std::shared_ptr<Shape> s, Angle a);
-// auto r = RotatedShape(s,Angle::R90);
-std::shared_ptr<Shape> makeScaledShape(std::shared_ptr<Shape> s, double sx, double sy);
-std::shared_ptr<Shape> makeLayeredShape(std::initializer_list<Shape> i);
-std::shared_ptr<Shape> makeVerticalShape(std::initializer_list<Shape> i);
-std::shared_ptr<Shape> makeHorizontalShape(std::initializer_list<Shape> i);
+/**********************makeShape functions**********************/
+std::shared_ptr<Shape> makeCircle(double radius) {return std::make_shared<Circle>(Circle(radius));}
+std::shared_ptr<Shape> makePolygon(int numSides, double length) {return std::make_shared<Polygon>(Polygon(numSides, length));}
+std::shared_ptr<Shape> makeRectangle(double width, double height) {return std::make_shared<Rectangle>(Rectangle(width, height));}
+std::shared_ptr<Shape> makeSpacer(double width, double height) {return std::make_shared<Spacer>(Spacer(width, height));}
+std::shared_ptr<Shape> makeSquare(double length) {return std::make_shared<Polygon>(Polygon(4, length));}
+std::shared_ptr<Shape> makeTriangle(double length) {return std::make_shared<Polygon>(Polygon(3, length));}
+std::shared_ptr<Shape> makeRotatedShape(std::shared_ptr<Shape> & s, Angle a) {return std::make_shared<Rotated>(Rotated(s, a));}
+std::shared_ptr<Shape> makeScaledShape(std::shared_ptr<Shape> & s, double sx, double sy) {return std::make_shared<Scaled>(Scaled(s, sx, sy));}
+std::shared_ptr<Shape> makeLayeredShape(std::initializer_list<std::shared_ptr<Shape>> i) {return std::make_shared<Layered>(Layered(i));}
+std::shared_ptr<Shape> makeVerticalShape(std::initializer_list<std::shared_ptr<Shape>> i) {return std::make_shared<Vertical>(Vertical(i));}
+std::shared_ptr<Shape> makeHorizontalShape(std::initializer_list<std::shared_ptr<Shape>> i) {return std::make_shared<Horizontal>(Horizontal(i));}
 
 
 
