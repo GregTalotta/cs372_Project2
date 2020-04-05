@@ -54,31 +54,70 @@ double Spacer::getWidth() const { return _width; }
 void Spacer::generatePostScript(std::ostream &os) const {}
 
 //Rotated definitions
-Rotated::Rotated(std::shared_ptr<Shape> & shape, Angle rotationAngle) {}
+Rotated::Rotated(std::shared_ptr<Shape> & shape, Angle rotationAngle) {
+    if (rotationAngle == Angle::R90 || rotationAngle == Angle::R270){
+        _height = shape->getWidth();
+        _width = shape->getHeight();
+    }
+    else{
+        _height = shape->getHeight();
+        _width = shape->getWidth();
+    }
+}
 double Rotated::getHeight() const { return _height; }
 double Rotated::getWidth() const { return _width; }
 void Rotated::generatePostScript(std::ostream &os) const {}
 
 //Scaled definitions
-Scaled::Scaled(std::shared_ptr<Shape> & shape, double fx, double fy){}
+Scaled::Scaled(std::shared_ptr<Shape> & shape, double fx, double fy){
+    _height = shape->getHeight() * fy;
+    _width = shape->getWidth() * fx;
+}
 double Scaled::getHeight() const { return _height; }
 double Scaled::getWidth() const { return _width; }
 void Scaled::generatePostScript(std::ostream &os) const {}
 
 //Layered definitions
-Layered::Layered(std::initializer_list<std::shared_ptr<Shape>> shapes){}
+Layered::Layered(std::initializer_list<std::shared_ptr<Shape>> shapes){
+    double maxHeight = 0.0;
+    double maxWidth = 0.0;
+    for (auto &v : shapes){
+        if (maxWidth < v->getWidth()) { maxWidth = v->getWidth(); }
+        if (maxHeight < v->getHeight()) { maxHeight = v->getHeight(); }
+    }
+    _height = maxHeight;
+    _width = maxWidth;
+}
 double Layered::getHeight() const { return _height; }
 double Layered::getWidth() const { return _width; }
 void Layered::generatePostScript(std::ostream &os) const {}
 
 //Vertical definitions
-Vertical::Vertical(std::initializer_list<std::shared_ptr<Shape>> shapes){}
+Vertical::Vertical(std::initializer_list<std::shared_ptr<Shape>> shapes){
+    double totalHeight = 0.0;
+    double totalWidth = 0.0;
+    for (auto v : shapes){
+        totalHeight += v->getHeight();
+        if (totalWidth < v->getWidth()) { totalWidth = v->getWidth(); }
+    }
+    _height = totalHeight;
+    _width = totalWidth;
+}
 double Vertical::getHeight() const { return _height; }
 double Vertical::getWidth() const { return _width; }
 void Vertical::generatePostScript(std::ostream &os) const {}
 
 //Horizontal definitions
-Horizontal::Horizontal(std::initializer_list<std::shared_ptr<Shape>> shapes){}
+Horizontal::Horizontal(std::initializer_list<std::shared_ptr<Shape>> shapes){
+    double totalHeight = 0.0;
+    double totalWidth = 0.0;
+    for (auto v : shapes){
+        totalWidth += v->getWidth();
+        if (totalHeight < v->getHeight()) { totalHeight = v->getHeight(); }
+    }
+    _height = totalHeight;
+    _width = totalWidth;
+}
 double Horizontal::getHeight() const { return _height; }
 double Horizontal::getWidth() const { return _width; }
 void Horizontal::generatePostScript(std::ostream &os) const {}

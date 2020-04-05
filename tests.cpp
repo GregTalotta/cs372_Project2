@@ -91,8 +91,8 @@ TEST_CASE("layering a larger square with a smaller circle"){
     std::shared_ptr<Shape> squareLarge = makeSquare(5);
     std::shared_ptr<Shape> circleSmall = makeCircle(1);
     std::shared_ptr<Shape> checkLayered = makeLayeredShape({circleSmall, squareLarge});
-    CHECK(checkLayered->getHeight() == 5);
-    CHECK(checkLayered->getWidth() == 5);
+    CHECK(checkLayered->getHeight() == doctest::Approx(5));
+    CHECK(checkLayered->getWidth() == doctest::Approx(5));
 }
 
 TEST_CASE("vertical shape made with a square, circle, triangle"){
@@ -108,7 +108,7 @@ TEST_CASE("horizontal shape with a square, circle, triangle"){
     std::shared_ptr<Shape> square = makeSquare(2);
     std::shared_ptr<Shape> circle = makeCircle(4);
     std::shared_ptr<Shape> triangle = makeTriangle(1);
-    std::shared_ptr<Shape> checkVertical = makeVerticalShape({square, circle, triangle});
-    CHECK(checkVertical->getHeight() == doctest::Approx(8));
-    CHECK(checkVertical->getWidth() == doctest::Approx((sin(PI*(3-1)/2*3))/(sin(PI/3))+8+2));
+    std::shared_ptr<Shape> checkHorizontal = makeHorizontalShape({square, circle, triangle});
+    CHECK(checkHorizontal->getHeight() == doctest::Approx(8));
+    CHECK(checkHorizontal->getWidth() == doctest::Approx((sin(PI * (3 - 1) / 2 * 3)) / (sin(PI / 3)) + 8 + 2));
 }
