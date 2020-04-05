@@ -9,6 +9,8 @@ using std::sin;
 
 const double PI = 3.14159;
 
+/************** Tests for the bounding box of the shapes **************/
+
 TEST_CASE("circle created"){
     std::shared_ptr<Shape> checkCircle1 = makeCircle(1);
     CHECK(checkCircle1->getHeight() == 2);
@@ -55,4 +57,58 @@ TEST_CASE("triangle created"){
     std::shared_ptr<Shape> checkTriangle = makeTriangle(1);
     CHECK(checkTriangle->getHeight() == doctest::Approx((1+cos(PI/3))/(2*sin(PI/3))));
     CHECK(checkTriangle->getWidth() == doctest::Approx((sin(PI*(3-1)/2*3))/(sin(PI/3))));
+}
+
+TEST_CASE("rotate a rectangle 90 degrees"){
+    std::shared_ptr<Shape> rectangle = makeRectangle(2,1);
+    std::shared_ptr<Shape> checkRectangle90 = makeRotatedShape(rectangle, Angle::R90);
+    CHECK(checkRectangle90->getHeight() == 2);
+    CHECK(checkRectangle90->getWidth() == 1);
+}
+
+TEST_CASE("rotate a rectangle 180 degrees"){
+    std::shared_ptr<Shape> rectangle = makeRectangle(2,1);
+    std::shared_ptr<Shape> checkRectangle90 = makeRotatedShape(rectangle, Angle::R180);
+    CHECK(checkRectangle90->getHeight() == 1);
+    CHECK(checkRectangle90->getWidth() == 2);
+}
+
+TEST_CASE("rotate a rectangle 270 degrees"){
+    std::shared_ptr<Shape> rectangle = makeRectangle(2,1);
+    std::shared_ptr<Shape> checkRectangle90 = makeRotatedShape(rectangle, Angle::R270);
+    CHECK(checkRectangle90->getHeight() == 2);
+    CHECK(checkRectangle90->getWidth() == 1);
+}
+
+TEST_CASE("scaling a rectangle"){
+    std::shared_ptr<Shape> rect = makeRectangle(2,1);
+    std::shared_ptr<Shape> checkScale = makeScaledShape(rect, 3, 2);
+    CHECK(checkScale->getWidth() == doctest::Approx(6));
+    CHECK(checkScale->getHeight() == doctest::Approx(2));
+}
+
+TEST_CASE("layering a larger square with a smaller circle"){
+    std::shared_ptr<Shape> squareLarge = makeSquare(5);
+    std::shared_ptr<Shape> circleSmall = makeCircle(1);
+    std::shared_ptr<Shape> checkLayered = makeLayeredShape({circleSmall, squareLarge});
+    CHECK(checkLayered->getHeight() == 5);
+    CHECK(checkLayered->getWidth() == 5);
+}
+
+TEST_CASE("vertical shape made with a square, circle, triangle"){
+    std::shared_ptr<Shape> square = makeSquare(2);
+    std::shared_ptr<Shape> circle = makeCircle(4);
+    std::shared_ptr<Shape> triangle = makeTriangle(1);
+    std::shared_ptr<Shape> checkVertical = makeVerticalShape({square, circle, triangle});
+    CHECK(checkVertical->getHeight() == doctest::Approx((1+cos(PI/3))/(2*sin(PI/3))+2+8));
+    CHECK(checkVertical->getWidth() == doctest::Approx(8));
+}
+
+TEST_CASE("horizontal shape with a square, circle, triangle"){
+    std::shared_ptr<Shape> square = makeSquare(2);
+    std::shared_ptr<Shape> circle = makeCircle(4);
+    std::shared_ptr<Shape> triangle = makeTriangle(1);
+    std::shared_ptr<Shape> checkVertical = makeVerticalShape({square, circle, triangle});
+    CHECK(checkVertical->getHeight() == doctest::Approx(8));
+    CHECK(checkVertical->getWidth() == doctest::Approx((sin(PI*(3-1)/2*3))/(sin(PI/3))+8+2));
 }
