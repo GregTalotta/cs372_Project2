@@ -53,20 +53,6 @@ double Spacer::getHeight() const { return _height; }
 double Spacer::getWidth() const { return _width; }
 void Spacer::generatePostScript(std::ostream &os) const {}
 
-//Square definitions
-Square::Square(double sideLength){
-    _height = sideLength;
-    _width = sideLength;}
-double Square::getHeight() const { return _height; }
-double Square::getWidth() const { return _width; }
-void Square::generatePostScript(std::ostream &os) const {}
-
-//Triangle definitions
-Triangle::Triangle(double sideLength){}
-double Triangle::getHeight() const { return _height; }
-double Triangle::getWidth() const { return _width; }
-void Triangle::generatePostScript(std::ostream &os) const {}
-
 //Rotated definitions
 Rotated::Rotated(std::shared_ptr<Shape> & shape, Angle rotationAngle) {}
 double Rotated::getHeight() const { return _height; }

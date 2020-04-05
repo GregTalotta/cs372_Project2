@@ -47,20 +47,7 @@ public:
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
 };
-class Square: public Shape {
-public:
-    explicit Square(double);
-    double getHeight() const override;
-    double getWidth() const override;
-    void generatePostScript(std::ostream &os) const override;
-};
-class Triangle: public Shape{
-public:
-    explicit Triangle(double);
-    double getHeight() const override;
-    double getWidth() const override;
-    void generatePostScript(std::ostream &os) const override;
-};
+
 enum class Angle {R90,R180,R270};
 class Rotated: public Shape{
 public:
