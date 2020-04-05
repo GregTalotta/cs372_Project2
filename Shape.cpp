@@ -3,6 +3,10 @@
  */
 
 #include "Shape.hpp"
+#include <cmath>
+using std::cos;
+using std::sin;
+const double PI = 3.14159;
 
 //Circle definitions
 Circle::Circle(double radius){
@@ -14,7 +18,20 @@ double Circle::getWidth() const { return _width; }
 void Circle::generatePostScript(std::ostream &os) const {}
 
 //Polygon definitions
-Polygon::Polygon(int numSides, double sideLength){}
+Polygon::Polygon(int numSides, double sideLength){
+    if (numSides % 2 != 0){
+        _height = sideLength*(1+cos(PI/numSides))/(2*sin(PI/numSides));
+        _width = sideLength*sin(PI*(numSides-1)/2*numSides)/(sin(PI/numSides));
+    }
+    else if(numSides % 4 == 0){
+        _height = sideLength*(cos(PI/numSides))/(sin(PI/numSides));
+        _width = sideLength*cos(PI/numSides)/(sin(PI/numSides));
+    }
+    else {
+        _height = sideLength*(cos(PI/numSides))/(sin(PI/numSides));
+        _width = sideLength/(sin(PI/numSides));
+    }
+}
 double Polygon::getHeight() const { return _height; }
 double Polygon::getWidth() const { return _width; }
 void Polygon::generatePostScript(std::ostream &os) const {}
