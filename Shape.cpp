@@ -171,7 +171,7 @@ double Vertical::getWidth() const { return _width; }
 void Vertical::generatePostScript(std::ostream &os) const {
     int shift = 0;
     for (auto v : _shapes){
-        os << "\ngsave\n" << (int)(-72*(v->getWidth()/2)) << " " << shift << " translate\n";
+        os << "\ngsave\n" << (int)(-72*(v->getWidth()/2)+((72*_width)/2)) << " " << shift << " translate\n";
         v->generatePostScript(os);
         os << "\ngrestore\n";
         shift += 72*(v->getHeight());
@@ -198,7 +198,7 @@ void Horizontal::generatePostScript(std::ostream &os) const {
     int shift = 0;
     for (auto v : _shapes){
         
-        os << "\ngsave\n" << shift << " " << (int)(-72*(v->getHeight()/2)) << " translate\n";
+        os << "\ngsave\n" << shift << " " << (int)((-72*(v->getHeight()/2))+ ((72*_height)/2)) << " translate\n";
         v->generatePostScript(os);
         os << "\ngrestore\n";
         shift += 72*(v->getWidth());
