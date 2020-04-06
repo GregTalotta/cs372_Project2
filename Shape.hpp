@@ -8,6 +8,7 @@
 #include <iostream>
 #include <initializer_list>
 #include <memory>
+#include <vector>
 
 class Shape {
 protected:
@@ -60,6 +61,9 @@ public:
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
+    protected:
+        std::shared_ptr<Shape>  _shape;
+        Angle _rotationAngle;
 };
 class Scaled: public Shape{
 public:
@@ -67,6 +71,10 @@ public:
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
+    protected:
+        std::shared_ptr<Shape>  _shape;
+        double _fx;
+        double _fy;
 };
 class Layered: public Shape{
 public:
@@ -74,6 +82,8 @@ public:
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
+    protected:
+        std::vector<std::shared_ptr<Shape>> _shapes;
 };
 class Vertical: public Shape{
 public:
@@ -81,6 +91,8 @@ public:
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
+    protected:
+        std::vector<std::shared_ptr<Shape>> _shapes;
 };
 class Horizontal: public Shape{
 public:
@@ -88,6 +100,8 @@ public:
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
+    protected:
+        std::vector<std::shared_ptr<Shape>> _shapes;
 };
 class Special: public Shape{
 public:

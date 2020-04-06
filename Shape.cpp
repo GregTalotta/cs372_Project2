@@ -84,34 +84,72 @@ Rotated::Rotated(std::shared_ptr<Shape> & shape, Angle rotationAngle) {
         _height = shape->getHeight();
         _width = shape->getWidth();
     }
+    _shape = shape;
+    _rotationAngle = rotationAngle;
 }
 double Rotated::getHeight() const { return _height; }
 double Rotated::getWidth() const { return _width; }
-void Rotated::generatePostScript(std::ostream &os) const {}
+void Rotated::generatePostScript(std::ostream &os) const {
+    if(_rotationAngle == Angle::R90)
+    {
+        os << "90 rotate \n";
+    }
+    else if(_rotationAngle == Angle::R180)
+    {
+        os << "180 rotate \n";
+    }
+    else
+    {
+        os << "270 rotate \n";
+    }
+    _shape->generatePostScript(os);
+}
 
 //Scaled definitions
 Scaled::Scaled(std::shared_ptr<Shape> & shape, double fx, double fy){
     _height = shape->getHeight() * fy;
     _width = shape->getWidth() * fx;
+    _shape = shape;
+    _fx = fx;
+    _fy = fy;
 }
 double Scaled::getHeight() const { return _height; }
 double Scaled::getWidth() const { return _width; }
-void Scaled::generatePostScript(std::ostream &os) const {}
+void Scaled::generatePostScript(std::ostream &os) const {
+    os <<"\n"<< _fx << " " << _fy << " scale\n";
+    _shape->generatePostScript(os);
+    os <<"\n"<< 1/_fx << " " << 1/_fy << " scale\n";
+}
 
 //Layered definitions
 Layered::Layered(std::initializer_list<std::shared_ptr<Shape>> shapes){
     double maxHeight = 0.0;
     double maxWidth = 0.0;
     for (auto &v : shapes){
-        if (maxWidth < v->getWidth()) { maxWidth = v->getWidth(); }
-        if (maxHeight < v->getHeight()) { maxHeight = v->getHeight(); }
+        if (maxWidth < v->getWidth()) 
+        { 
+            maxWidth = v->getWidth();
+        }
+        if (maxHeight < v->getHeight()) 
+        { 
+            maxHeight = v->getHeight(); 
+        }
+    }
+    for (auto v : shapes){
+        _shapes.push_back(v);
     }
     _height = maxHeight;
     _width = maxWidth;
 }
 double Layered::getHeight() const { return _height; }
 double Layered::getWidth() const { return _width; }
-void Layered::generatePostScript(std::ostream &os) const {}
+void Layered::generatePostScript(std::ostream &os) const {
+    for (auto v : _shapes){
+        os << "\ngsave\n" << -72*(v->getWidth()/2) << " " << -72*(v->getHeight()/2) << " translate\n";
+        v->generatePostScript(os);
+        os << "\ngrestore\n";
+    }
+}
 
 //Vertical definitions
 Vertical::Vertical(std::initializer_list<std::shared_ptr<Shape>> shapes){
@@ -121,12 +159,17 @@ Vertical::Vertical(std::initializer_list<std::shared_ptr<Shape>> shapes){
         totalHeight += v->getHeight();
         if (totalWidth < v->getWidth()) { totalWidth = v->getWidth(); }
     }
+    for (auto v : shapes){
+        _shapes.push_back(v);
+    }
     _height = totalHeight;
     _width = totalWidth;
 }
 double Vertical::getHeight() const { return _height; }
 double Vertical::getWidth() const { return _width; }
-void Vertical::generatePostScript(std::ostream &os) const {}
+void Vertical::generatePostScript(std::ostream &os) const {
+    
+}
 
 //Horizontal definitions
 Horizontal::Horizontal(std::initializer_list<std::shared_ptr<Shape>> shapes){
@@ -135,6 +178,9 @@ Horizontal::Horizontal(std::initializer_list<std::shared_ptr<Shape>> shapes){
     for (auto v : shapes){
         totalWidth += v->getWidth();
         if (totalHeight < v->getHeight()) { totalHeight = v->getHeight(); }
+    }
+    for (auto v : shapes){
+        _shapes.push_back(v);
     }
     _height = totalHeight;
     _width = totalWidth;

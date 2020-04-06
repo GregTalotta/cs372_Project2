@@ -17,24 +17,12 @@ int main()
     auto myRec = makeRectangle(2.0, 5.0);
     auto myTri = makeTriangle(3.0);
     auto mySpace = makeSpacer(2.0, 3.0);
+    auto myScale = makeScaledShape(mypoly, 2, 2);
+    auto myLayered = makeLayeredShape({mycir, myScale, mySquare, mypoly, myRec, myTri, mySpace});
     start();
-    mycir->generatePostScript(cout);
+    myLayered->generatePostScript(cout);
     end();
-    start();
-    mySquare->generatePostScript(cout);
-    end();
-    start();
-    mypoly->generatePostScript(cout);
-    end();
-    start();
-    myRec->generatePostScript(cout);
-    end();
-    start();
-    myTri->generatePostScript(cout);
-    end();
-    start();
-    mySpace->generatePostScript(cout);
-    end();
+    
     return 0;
 }
 
