@@ -17,7 +17,7 @@ Circle::Circle(double radius){
 double Circle::getHeight() const { return _height; }
 double Circle::getWidth() const { return _width; }
 void Circle::generatePostScript(std::ostream &os) const {
-    os << "\nnewpath \n72 72 " << 72 * _radius << " 0 360 arc closepath \nstroke";
+    os << "\nnewpath \n" << 72 * _radius << " " << 72 * _radius << " " <<  72 * _radius <<" 0 360 arc closepath \nstroke";
 }
 
 //Polygon definitions
