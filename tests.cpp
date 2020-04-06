@@ -21,7 +21,7 @@ TEST_CASE("circle created"){
 TEST_CASE("polygon of 5 sides created"){
     std::shared_ptr<Shape> checkPolygon = makePolygon(5,1);
     CHECK(checkPolygon->getHeight() == doctest::Approx((1+cos(PI/5))/(2*sin(PI/5))));
-    CHECK(checkPolygon->getWidth() == doctest::Approx((sin(PI*(5-1)/2*5))/(sin(PI/5))));
+    CHECK(checkPolygon->getWidth() == doctest::Approx((1 * sin(PI * (5 - 1) / (2 * 5))) / sin(PI / 5)));
 }
 
 TEST_CASE("polygon of 6 sides created"){
@@ -57,7 +57,7 @@ TEST_CASE("square created"){
 TEST_CASE("triangle created"){
     std::shared_ptr<Shape> checkTriangle = makeTriangle(1);
     CHECK(checkTriangle->getHeight() == doctest::Approx((1+cos(PI/3))/(2*sin(PI/3))));
-    CHECK(checkTriangle->getWidth() == doctest::Approx((sin(PI*(3-1)/2*3))/(sin(PI/3))));
+    CHECK(checkTriangle->getWidth() == doctest::Approx((1 * sin(PI * (3 - 1) / (2 * 3))) / sin(PI / 3)));
 }
 
 TEST_CASE("rotate a rectangle 90 degrees"){
@@ -111,5 +111,5 @@ TEST_CASE("horizontal shape with a square, circle, triangle"){
     std::shared_ptr<Shape> triangle = makeTriangle(1);
     std::shared_ptr<Shape> checkHorizontal = makeHorizontalShape({square, circle, triangle});
     CHECK(checkHorizontal->getHeight() == doctest::Approx(8));
-    CHECK(checkHorizontal->getWidth() == doctest::Approx((sin(PI * (3 - 1) / 2 * 3)) / (sin(PI / 3)) + 8 + 2));
+    CHECK(checkHorizontal->getWidth() == doctest::Approx(square->getWidth()+circle->getWidth()+triangle->getWidth()));
 }
