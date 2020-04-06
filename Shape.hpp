@@ -25,6 +25,8 @@ public:
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
+    protected:
+        double _radius;
 };
 class Polygon: public Shape {
 public:
@@ -32,6 +34,9 @@ public:
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
+    protected:
+        int _numSides;
+        double _sideLength;
 };
 class Rectangle: public Shape {
 public:

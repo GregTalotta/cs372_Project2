@@ -10,12 +10,15 @@ const double PI = 3.14159;
 
 //Circle definitions
 Circle::Circle(double radius){
+    _radius = radius;
     _height = 2 * radius;
     _width = 2 * radius;
 }
 double Circle::getHeight() const { return _height; }
 double Circle::getWidth() const { return _width; }
-void Circle::generatePostScript(std::ostream &os) const {}
+void Circle::generatePostScript(std::ostream &os) const {
+    os << "\nnewpath \n72 72 " << 72 * _radius << " 0 360 arc closepath \nstroke";
+}
 
 //Polygon definitions
 Polygon::Polygon(int numSides, double sideLength){
@@ -31,10 +34,20 @@ Polygon::Polygon(int numSides, double sideLength){
         _height = sideLength*(cos(PI/numSides))/(sin(PI/numSides));
         _width = sideLength/(sin(PI/numSides));
     }
+    _numSides = numSides;
+    _sideLength = sideLength;
 }
 double Polygon::getHeight() const { return _height; }
 double Polygon::getWidth() const { return _width; }
-void Polygon::generatePostScript(std::ostream &os) const {}
+void Polygon::generatePostScript(std::ostream &os) const {
+    os << "\nnewpath\n0 0 moveto\n";
+    for(int i = 0; i < _numSides; ++i )
+    {
+        os <<  72*_sideLength << " 0 rlineto\n"
+            << (360 / _numSides) << " rotate\n";
+    }
+    os << "stroke";
+}
 
 //Rectangle definitions
 Rectangle::Rectangle(double width, double height) {
@@ -43,7 +56,11 @@ Rectangle::Rectangle(double width, double height) {
 }
 double Rectangle::getHeight() const { return _height; }
 double Rectangle::getWidth() const { return _width; }
-void Rectangle::generatePostScript(std::ostream &os) const {}
+void Rectangle::generatePostScript(std::ostream &os) const {
+    os << "\nnewpath \n0 0 moveto \n" << 72*_width << " 0 lineto\n"  
+        << 72*_width << " " << 72*_height << " lineto \n" 
+        << "0 " << 72*_height << " lineto \nclosepath \nstroke";
+}
 
 //Spacer definitions
 Spacer::Spacer(double width, double height){
@@ -51,7 +68,11 @@ Spacer::Spacer(double width, double height){
     _width = width;}
 double Spacer::getHeight() const { return _height; }
 double Spacer::getWidth() const { return _width; }
-void Spacer::generatePostScript(std::ostream &os) const {}
+void Spacer::generatePostScript(std::ostream &os) const {
+    os << "\nnewpath \n0 0 moveto \n" << 72*_width << " 0 lineto\n"  
+        << 72*_width << " " << 72*_height << " lineto \n" 
+        << "0 " << 72*_height << " lineto \nclosepath";
+}
 
 //Rotated definitions
 Rotated::Rotated(std::shared_ptr<Shape> & shape, Angle rotationAngle) {
@@ -133,7 +154,7 @@ std::shared_ptr<Shape> makeCircle(double radius) {return std::make_shared<Circle
 std::shared_ptr<Shape> makePolygon(int numSides, double length) {return std::make_shared<Polygon>(Polygon(numSides, length));}
 std::shared_ptr<Shape> makeRectangle(double width, double height) {return std::make_shared<Rectangle>(Rectangle(width, height));}
 std::shared_ptr<Shape> makeSpacer(double width, double height) {return std::make_shared<Spacer>(Spacer(width, height));}
-std::shared_ptr<Shape> makeSquare(double length) {return std::make_shared<Polygon>(Polygon(4, length));}
+std::shared_ptr<Shape> makeSquare(double length) {return std::make_shared<Rectangle>(Rectangle(length, length));}
 std::shared_ptr<Shape> makeTriangle(double length) {return std::make_shared<Polygon>(Polygon(3, length));}
 std::shared_ptr<Shape> makeRotatedShape(std::shared_ptr<Shape> & s, Angle a) {return std::make_shared<Rotated>(Rotated(s, a));}
 std::shared_ptr<Shape> makeScaledShape(std::shared_ptr<Shape> & s, double sx, double sy) {return std::make_shared<Scaled>(Scaled(s, sx, sy));}
