@@ -223,3 +223,17 @@ std::shared_ptr<Shape> makeScaledShape(std::shared_ptr<Shape> & s, double sx, do
 std::shared_ptr<Shape> makeLayeredShape(std::initializer_list<std::shared_ptr<Shape>> i) {return std::make_shared<Layered>(Layered(i));}
 std::shared_ptr<Shape> makeVerticalShape(std::initializer_list<std::shared_ptr<Shape>> i) {return std::make_shared<Vertical>(Vertical(i));}
 std::shared_ptr<Shape> makeHorizontalShape(std::initializer_list<std::shared_ptr<Shape>> i) {return std::make_shared<Horizontal>(Horizontal(i));}
+
+/**********************utility functions**********************/
+void newPage(std::ostream &os, double x, double y){
+    os << "%! \n " << (int)(72*x) << " " << (int)(72*y) << " translate\n";
+    return;
+}
+void movePosition(std::ostream &os, double x, double y){
+    os << "\n " << (int)(72*x) << " " << (int)(72*y) << " translate\n";
+    return;
+}
+void endPage(std::ostream &os){
+    os << "\nshowpage \n\n\n";
+    return;
+}

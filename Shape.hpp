@@ -122,6 +122,9 @@ std::shared_ptr<Shape> makeScaledShape(std::shared_ptr<Shape> & s, double sx, do
 std::shared_ptr<Shape> makeLayeredShape(std::initializer_list<std::shared_ptr<Shape>> i);
 std::shared_ptr<Shape> makeVerticalShape(std::initializer_list<std::shared_ptr<Shape>> i);
 std::shared_ptr<Shape> makeHorizontalShape(std::initializer_list<std::shared_ptr<Shape>> i);
+void newPage(std::ostream &os, double x, double y);
+void endPage(std::ostream &os);
+void movePosition(std::ostream &os, double x, double y);
 
 #endif // CPS2020_SHAPE_HPP
 
