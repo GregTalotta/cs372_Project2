@@ -91,19 +91,22 @@ Rotated::Rotated(std::shared_ptr<Shape> & shape, Angle rotationAngle) {
 double Rotated::getHeight() const { return _height; }
 double Rotated::getWidth() const { return _width; }
 void Rotated::generatePostScript(std::ostream &os) const {
+    os << "\ngsave\n";
     if(_rotationAngle == Angle::R90)
     {
-        os << "90 rotate \n";
+        os << (int)(72*_height) << " 0 translate\n90 rotate \n";
     }
     else if(_rotationAngle == Angle::R180)
     {
-        os << "180 rotate \n";
+
+        os <<  (int)(72*_width) << " " << (int)(72*_height) << " translate \n180 rotate \n";
     }
     else
     {
-        os << "270 rotate \n";
+        os <<  "0 " << (int)(72*_width) << " translate \n270 rotate \n";
     }
     _shape->generatePostScript(os);
+    os << "\ngrestore\n";
 }
 
 //Scaled definitions
@@ -206,10 +209,22 @@ void Horizontal::generatePostScript(std::ostream &os) const {
 }
 
 //Special definitions
-Special::Special(/*not sure what is required*/){}
+Special::Special(double height){
+    _bottomRadius = height/3.5;
+    _height = height;
+    _width = _bottomRadius * 3;
+}
 double Special::getHeight() const { return _height; }
 double Special::getWidth() const { return _width; }
-void Special::generatePostScript(std::ostream &os) const {}
+void Special::generatePostScript(std::ostream &os) const {
+    auto head = makeCircle(_bottomRadius/4);
+    auto body = makeCircle(_bottomRadius/2);
+    auto arm = makeRectangle(_bottomRadius, (_bottomRadius/10));
+    auto booty = makeCircle(_bottomRadius);
+    auto mid = makeHorizontalShape({ arm,body,arm });
+    auto snowMan = makeVerticalShape({ booty,mid,head});
+    snowMan->generatePostScript(os);
+}
 
 /**********************makeShape functions**********************/
 std::shared_ptr<Shape> makeCircle(double radius) {return std::make_shared<Circle>(Circle(radius));}
@@ -223,17 +238,18 @@ std::shared_ptr<Shape> makeScaledShape(std::shared_ptr<Shape> & s, double sx, do
 std::shared_ptr<Shape> makeLayeredShape(std::initializer_list<std::shared_ptr<Shape>> i) {return std::make_shared<Layered>(Layered(i));}
 std::shared_ptr<Shape> makeVerticalShape(std::initializer_list<std::shared_ptr<Shape>> i) {return std::make_shared<Vertical>(Vertical(i));}
 std::shared_ptr<Shape> makeHorizontalShape(std::initializer_list<std::shared_ptr<Shape>> i) {return std::make_shared<Horizontal>(Horizontal(i));}
+std::shared_ptr<Shape> makeSpecial(double height) {return std::make_shared<Special>(Special(height));}
 
 /**********************utility functions**********************/
 void newPage(std::ostream &os, double x, double y){
-    os << "%! \n " << (int)(72*x) << " " << (int)(72*y) << " translate\n";
+    os << "%! \n" << "\ngsave \n" << (int)(72*x) << " " << (int)(72*y) << " translate\n";
     return;
 }
 void movePosition(std::ostream &os, double x, double y){
-    os << "\n " << (int)(72*x) << " " << (int)(72*y) << " translate\n";
+    os << "\n grestore \ngsave \n" << (int)(72*x) << " " << (int)(72*y) << " translate\n";
     return;
 }
 void endPage(std::ostream &os){
-    os << "\nshowpage \n\n\n";
+    os << "\n grestore \nshowpage \n\n\n";
     return;
 }

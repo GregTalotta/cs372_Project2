@@ -105,10 +105,12 @@ public:
 };
 class Special: public Shape{
 public:
-    Special(/*not sure what is required*/);
+    Special(double);
     double getHeight() const override;
     double getWidth() const override;
     void generatePostScript(std::ostream &os) const override;
+    protected:
+        double _bottomRadius;
 };
 
 std::shared_ptr<Shape> makeCircle(double radius);
@@ -122,6 +124,9 @@ std::shared_ptr<Shape> makeScaledShape(std::shared_ptr<Shape> & s, double sx, do
 std::shared_ptr<Shape> makeLayeredShape(std::initializer_list<std::shared_ptr<Shape>> i);
 std::shared_ptr<Shape> makeVerticalShape(std::initializer_list<std::shared_ptr<Shape>> i);
 std::shared_ptr<Shape> makeHorizontalShape(std::initializer_list<std::shared_ptr<Shape>> i);
+std::shared_ptr<Shape> makeSpecial(double height);
+
+
 void newPage(std::ostream &os, double x, double y);
 void endPage(std::ostream &os);
 void movePosition(std::ostream &os, double x, double y);
