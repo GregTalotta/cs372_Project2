@@ -23,16 +23,16 @@ void Circle::generatePostScript(std::ostream &os) const {
 //Polygon definitions
 Polygon::Polygon(int numSides, double sideLength){
     if (numSides % 2 != 0){
-        _height = sideLength*(1+cos(PI/numSides))/(2*sin(PI/numSides));
-        _width = sideLength*sin(PI*(numSides-1)/2*numSides)/(sin(PI/numSides));
+        _height = sideLength*(1+cos(PI/numSides))/(2*sin(PI/numSides));  
+        _width = (sideLength*sin(PI*(numSides-1)/(2*numSides)))/sin(PI/numSides);
     }
     else if(numSides % 4 == 0){
-        _height = sideLength*(cos(PI/numSides))/(sin(PI/numSides));
-        _width = sideLength*cos(PI/numSides)/(sin(PI/numSides));
+        _height = (sideLength*(cos(PI/numSides)))/sin(PI/numSides); 
+        _width = ((sideLength*cos(PI/numSides))/sin(PI/numSides));
     }
     else {
-        _height = sideLength*(cos(PI/numSides))/(sin(PI/numSides));
-        _width = sideLength/(sin(PI/numSides));
+        _height = (sideLength*cos(PI/numSides)/sin(PI/numSides)); 
+        _width = (sideLength/sin(PI/numSides));
     }
     _numSides = numSides;
     _sideLength = sideLength;
@@ -40,7 +40,8 @@ Polygon::Polygon(int numSides, double sideLength){
 double Polygon::getHeight() const { return _height; }
 double Polygon::getWidth() const { return _width; }
 void Polygon::generatePostScript(std::ostream &os) const {
-    os << "\nnewpath\n0 0 moveto\n";
+    os << "\nnewpath\n";
+    os << ((int) (72*((_width - _sideLength)/2))) <<" 0 moveto \n";
     for(int i = 0; i < _numSides; ++i )
     {
         os <<  72*_sideLength << " 0 rlineto\n"
@@ -145,7 +146,7 @@ double Layered::getHeight() const { return _height; }
 double Layered::getWidth() const { return _width; }
 void Layered::generatePostScript(std::ostream &os) const {
     for (auto v : _shapes){
-        os << "\ngsave\n" << -72*(v->getWidth()/2) << " " << -72*(v->getHeight()/2) << " translate\n";
+        os << "\ngsave\n" << (int)(-72*(v->getWidth()/2)) << " " << (int)(-72*(v->getHeight()/2)) << " translate\n";
         v->generatePostScript(os);
         os << "\ngrestore\n";
     }
@@ -168,7 +169,13 @@ Vertical::Vertical(std::initializer_list<std::shared_ptr<Shape>> shapes){
 double Vertical::getHeight() const { return _height; }
 double Vertical::getWidth() const { return _width; }
 void Vertical::generatePostScript(std::ostream &os) const {
-    
+    int shift = 0;
+    for (auto v : _shapes){
+        os << "\ngsave\n" << (int)(-72*(v->getWidth()/2)) << " " << shift << " translate\n";
+        v->generatePostScript(os);
+        os << "\ngrestore\n";
+        shift += 72*(v->getHeight());
+    }
 }
 
 //Horizontal definitions
@@ -187,7 +194,16 @@ Horizontal::Horizontal(std::initializer_list<std::shared_ptr<Shape>> shapes){
 }
 double Horizontal::getHeight() const { return _height; }
 double Horizontal::getWidth() const { return _width; }
-void Horizontal::generatePostScript(std::ostream &os) const {}
+void Horizontal::generatePostScript(std::ostream &os) const {
+    int shift = 0;
+    for (auto v : _shapes){
+        
+        os << "\ngsave\n" << shift << " " << (int)(-72*(v->getHeight()/2)) << " translate\n";
+        v->generatePostScript(os);
+        os << "\ngrestore\n";
+        shift += 72*(v->getWidth());
+    }
+}
 
 //Special definitions
 Special::Special(/*not sure what is required*/){}
