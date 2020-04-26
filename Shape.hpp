@@ -76,32 +76,47 @@ public:
         double _fx;
         double _fy;
 };
-class Layered: public Shape{
+
+class Multiples: public Shape{
+    protected:
+        std::vector<std::shared_ptr<Shape>> _shapes;
+        virtual int moveToPosForShape(std::ostream &os, int i, int shift) const{return shift;};
+    public:
+        double getHeight() const override{return 0;}
+        double getWidth() const override{return 0;}
+        void generatePostScript(std::ostream &os) const override{
+            int shift = 0;
+            for(auto i = 0; i < _shapes.size(); ++i){
+                os << "\ngsave\n";
+                shift = moveToPosForShape(os, i, shift);
+                _shapes[i]->generatePostScript(os);
+                os << "\ngrestore\n";
+            }
+        }
+};
+
+
+
+class Layered: public Multiples{
 public:
     Layered(std::initializer_list<std::shared_ptr<Shape>>);
     double getHeight() const override;
     double getWidth() const override;
-    void generatePostScript(std::ostream &os) const override;
-    protected:
-        std::vector<std::shared_ptr<Shape>> _shapes;
+    int moveToPosForShape(std::ostream &os, int i, int shift) const override;
 };
-class Vertical: public Shape{
+class Vertical: public Multiples{
 public:
     Vertical(std::initializer_list<std::shared_ptr<Shape>>);
     double getHeight() const override;
     double getWidth() const override;
-    void generatePostScript(std::ostream &os) const override;
-    protected:
-        std::vector<std::shared_ptr<Shape>> _shapes;
+    int moveToPosForShape(std::ostream &os, int i, int shift) const override;
 };
-class Horizontal: public Shape{
+class Horizontal: public Multiples{
 public:
     Horizontal(std::initializer_list<std::shared_ptr<Shape>>);
     double getHeight() const override;
     double getWidth() const override;
-    void generatePostScript(std::ostream &os) const override;
-    protected:
-        std::vector<std::shared_ptr<Shape>> _shapes;
+    int moveToPosForShape(std::ostream &os, int i, int shift) const override;
 };
 class Special: public Shape{
 public:

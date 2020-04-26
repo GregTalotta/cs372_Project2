@@ -147,13 +147,11 @@ Layered::Layered(std::initializer_list<std::shared_ptr<Shape>> shapes){
 }
 double Layered::getHeight() const { return _height; }
 double Layered::getWidth() const { return _width; }
-void Layered::generatePostScript(std::ostream &os) const {
-    for (auto v : _shapes){
-        os << "\ngsave\n" << (int)(-72*(v->getWidth()/2)) << " " << (int)(-72*(v->getHeight()/2)) << " translate\n";
-        v->generatePostScript(os);
-        os << "\ngrestore\n";
-    }
+int Layered::moveToPosForShape(std::ostream &os, int i, int shift) const{
+    os << (int)(-72*(_shapes[i]->getWidth()/2)) << " " << (int)(-72*(_shapes[i]->getHeight()/2)) << " translate\n";
+    return shift;
 }
+
 
 //Vertical definitions
 Vertical::Vertical(std::initializer_list<std::shared_ptr<Shape>> shapes){
@@ -171,15 +169,12 @@ Vertical::Vertical(std::initializer_list<std::shared_ptr<Shape>> shapes){
 }
 double Vertical::getHeight() const { return _height; }
 double Vertical::getWidth() const { return _width; }
-void Vertical::generatePostScript(std::ostream &os) const {
-    int shift = 0;
-    for (auto v : _shapes){
-        os << "\ngsave\n" << (int)(-72*(v->getWidth()/2)+((72*_width)/2)) << " " << shift << " translate\n";
-        v->generatePostScript(os);
-        os << "\ngrestore\n";
-        shift += 72*(v->getHeight());
-    }
+int Vertical::moveToPosForShape(std::ostream &os, int i, int shift) const{
+    os << (int)(-72*(_shapes[i]->getWidth()/2)+((72*_width)/2)) << " " << shift << " translate\n";
+    shift += 72*(_shapes[i]->getHeight());
+    return shift;
 }
+
 
 //Horizontal definitions
 Horizontal::Horizontal(std::initializer_list<std::shared_ptr<Shape>> shapes){
@@ -197,16 +192,12 @@ Horizontal::Horizontal(std::initializer_list<std::shared_ptr<Shape>> shapes){
 }
 double Horizontal::getHeight() const { return _height; }
 double Horizontal::getWidth() const { return _width; }
-void Horizontal::generatePostScript(std::ostream &os) const {
-    int shift = 0;
-    for (auto v : _shapes){
-        
-        os << "\ngsave\n" << shift << " " << (int)((-72*(v->getHeight()/2))+ ((72*_height)/2)) << " translate\n";
-        v->generatePostScript(os);
-        os << "\ngrestore\n";
-        shift += 72*(v->getWidth());
-    }
+int Horizontal::moveToPosForShape(std::ostream &os, int i, int shift) const{
+    os << shift << " " << (int)((-72*(_shapes[i]->getHeight()/2))+ ((72*_height)/2)) << " translate\n";
+    shift += 72*(_shapes[i]->getWidth());
+    return shift;
 }
+
 
 //Special definitions
 Special::Special(double height){
