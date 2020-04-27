@@ -76,32 +76,34 @@ public:
         double _fx;
         double _fy;
 };
-class Layered: public Shape{
+class connectObj: public Shape{
+    protected:
+        virtual int reposObj(std::ostream &os, int curPos, int shift) const{return shift;};
+        std::vector<std::shared_ptr<Shape>> _shapes;
+    public:
+        void generatePostScript(std::ostream &os) const override;
+
+};
+class Layered: public connectObj{
 public:
     Layered(std::initializer_list<std::shared_ptr<Shape>>);
     double getHeight() const override;
     double getWidth() const override;
-    void generatePostScript(std::ostream &os) const override;
-    protected:
-        std::vector<std::shared_ptr<Shape>> _shapes;
+    int reposObj(std::ostream &os, int curPos, int shift) const override;
 };
-class Vertical: public Shape{
+class Vertical: public connectObj{
 public:
     Vertical(std::initializer_list<std::shared_ptr<Shape>>);
     double getHeight() const override;
     double getWidth() const override;
-    void generatePostScript(std::ostream &os) const override;
-    protected:
-        std::vector<std::shared_ptr<Shape>> _shapes;
+    int reposObj(std::ostream &os, int curPos, int shift) const override;
 };
-class Horizontal: public Shape{
+class Horizontal: public connectObj{
 public:
     Horizontal(std::initializer_list<std::shared_ptr<Shape>>);
     double getHeight() const override;
     double getWidth() const override;
-    void generatePostScript(std::ostream &os) const override;
-    protected:
-        std::vector<std::shared_ptr<Shape>> _shapes;
+    int reposObj(std::ostream &os, int curPos, int shift) const override;
 };
 class Special: public Shape{
 public:

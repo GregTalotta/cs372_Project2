@@ -111,5 +111,5 @@ TEST_CASE("horizontal shape with a square, circle, triangle"){
     std::shared_ptr<Shape> triangle = makeTriangle(1);
     std::shared_ptr<Shape> checkHorizontal = makeHorizontalShape({square, circle, triangle});
     CHECK(checkHorizontal->getHeight() == doctest::Approx(8));
-    CHECK(checkHorizontal->getWidth() == doctest::Approx(square->getWidth()+circle->getWidth()+triangle->getWidth()));
+    CHECK(checkHorizontal->getWidth() == doctest::Approx(11));
 }

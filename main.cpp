@@ -14,11 +14,14 @@ int main()
 {
     std::ofstream fout("snowman.ps");
 
-    auto snowMan = makeSpecial(7.0);
-    auto snowmidget = makeSpecial(0.75);
-    auto rotate = makeRotatedShape(snowmidget, Angle::R180);
-    auto vert = makeVerticalShape({snowmidget,rotate});
-    newPage(fout, 1, 1);
+    auto head = makeCircle(0.5);
+    auto body = makeCircle(1.0);
+    auto arm = makeRectangle(2.0, 0.2);
+    auto booty = makeCircle(2.0);
+    auto mid = makeHorizontalShape({ arm,body,arm });
+    auto snowMan = makeVerticalShape({ booty,mid,head});
+
+    fout << "%! \n288 288 translate\n";
     snowMan->generatePostScript(fout);
     movePosition(fout, 1, 2);
     vert->generatePostScript(fout);
