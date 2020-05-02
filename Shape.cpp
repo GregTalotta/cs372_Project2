@@ -147,12 +147,11 @@ Layered::Layered(std::initializer_list<std::shared_ptr<Shape>> shapes){
 }
 double Layered::getHeight() const { return _height; }
 double Layered::getWidth() const { return _width; }
-void Layered::generatePostScript(std::ostream &os) const {
-    for (const auto& v : _shapes){
-        os << "\ngsave\n" << (int)(-72*(v->getWidth()/2)) << " " << (int)(-72*(v->getHeight()/2)) << " translate\n";
-        v->generatePostScript(os);
-        os << "\ngrestore\n";
-    }
+
+int Layered::reposShape(std::ostream &os, int curPos, int shift) const {
+    os << (int)(-72*(_shapes[curPos]->getWidth()/2)) << " " << (int)(-72*(_shapes[curPos]->getHeight()/2))
+        << " translate\n";
+    return shift;;
 }
 
 //Vertical definitions
@@ -171,14 +170,11 @@ Vertical::Vertical(std::initializer_list<std::shared_ptr<Shape>> shapes){
 }
 double Vertical::getHeight() const { return _height; }
 double Vertical::getWidth() const { return _width; }
-void Vertical::generatePostScript(std::ostream &os) const {
-    int shift = 0;
-    for (const auto& v : _shapes){
-        os << "\ngsave\n" << (int)(-72*(v->getWidth()/2)+((72*_width)/2)) << " " << shift << " translate\n";
-        v->generatePostScript(os);
-        os << "\ngrestore\n";
-        shift += 72*(v->getHeight());
-    }
+
+int Vertical::reposShape(std::ostream &os, int curPos, int shift) const {
+    os << (int)(-72*(_shapes[curPos]->getWidth()/2)+((72*_width)/2)) << " " << shift << " translate\n";
+    shift += 72*(_shapes[curPos]->getHeight());
+    return shift;
 }
 
 //Horizontal definitions
@@ -197,15 +193,11 @@ Horizontal::Horizontal(std::initializer_list<std::shared_ptr<Shape>> shapes){
 }
 double Horizontal::getHeight() const { return _height; }
 double Horizontal::getWidth() const { return _width; }
-void Horizontal::generatePostScript(std::ostream &os) const {
-    int shift = 0;
-    for (const auto& v : _shapes){
-        
-        os << "\ngsave\n" << shift << " " << (int)((-72*(v->getHeight()/2))+ ((72*_height)/2)) << " translate\n";
-        v->generatePostScript(os);
-        os << "\ngrestore\n";
-        shift += 72*(v->getWidth());
-    }
+
+int Horizontal::reposShape(std::ostream &os, int curPos, int shift) const {
+    os << (int)(-72*(_shapes[curPos]->getHeight()/2)+((72*_height)/2)) << " " << shift << " translate\n";
+    shift += 72*(_shapes[curPos]->getWidth());
+    return shift;
 }
 
 //Special definitions
@@ -256,7 +248,7 @@ void MultipleShapes::generatePostScript(std::ostream &os) const {
     int shift = 0;
     for(auto i = 0; i < _shapes.size(); ++i){
         os << "\ngsave\n";
-        shift = reposObj(os, i, shift);
+        shift = reposShape(os, i, shift);
         _shapes[i]->generatePostScript(os);
         os << "\ngrestore\n";
     }
