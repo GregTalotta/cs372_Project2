@@ -139,7 +139,7 @@ Layered::Layered(std::initializer_list<std::shared_ptr<Shape>> shapes){
             maxHeight = v->getHeight(); 
         }
     }
-    for (auto v : shapes){
+    for (const auto& v : shapes){
         _shapes.push_back(v);
     }
     _height = maxHeight;
@@ -148,7 +148,7 @@ Layered::Layered(std::initializer_list<std::shared_ptr<Shape>> shapes){
 double Layered::getHeight() const { return _height; }
 double Layered::getWidth() const { return _width; }
 void Layered::generatePostScript(std::ostream &os) const {
-    for (auto v : _shapes){
+    for (const auto& v : _shapes){
         os << "\ngsave\n" << (int)(-72*(v->getWidth()/2)) << " " << (int)(-72*(v->getHeight()/2)) << " translate\n";
         v->generatePostScript(os);
         os << "\ngrestore\n";
@@ -159,11 +159,11 @@ void Layered::generatePostScript(std::ostream &os) const {
 Vertical::Vertical(std::initializer_list<std::shared_ptr<Shape>> shapes){
     double totalHeight = 0.0;
     double totalWidth = 0.0;
-    for (auto v : shapes){
+    for (const auto& v : shapes){
         totalHeight += v->getHeight();
         if (totalWidth < v->getWidth()) { totalWidth = v->getWidth(); }
     }
-    for (auto v : shapes){
+    for (const auto& v : shapes){
         _shapes.push_back(v);
     }
     _height = totalHeight;
@@ -173,7 +173,7 @@ double Vertical::getHeight() const { return _height; }
 double Vertical::getWidth() const { return _width; }
 void Vertical::generatePostScript(std::ostream &os) const {
     int shift = 0;
-    for (auto v : _shapes){
+    for (const auto& v : _shapes){
         os << "\ngsave\n" << (int)(-72*(v->getWidth()/2)+((72*_width)/2)) << " " << shift << " translate\n";
         v->generatePostScript(os);
         os << "\ngrestore\n";
@@ -185,11 +185,11 @@ void Vertical::generatePostScript(std::ostream &os) const {
 Horizontal::Horizontal(std::initializer_list<std::shared_ptr<Shape>> shapes){
     double totalHeight = 0.0;
     double totalWidth = 0.0;
-    for (auto v : shapes){
+    for (const auto& v : shapes){
         totalWidth += v->getWidth();
         if (totalHeight < v->getHeight()) { totalHeight = v->getHeight(); }
     }
-    for (auto v : shapes){
+    for (const auto& v : shapes){
         _shapes.push_back(v);
     }
     _height = totalHeight;
@@ -199,7 +199,7 @@ double Horizontal::getHeight() const { return _height; }
 double Horizontal::getWidth() const { return _width; }
 void Horizontal::generatePostScript(std::ostream &os) const {
     int shift = 0;
-    for (auto v : _shapes){
+    for (const auto& v : _shapes){
         
         os << "\ngsave\n" << shift << " " << (int)((-72*(v->getHeight()/2))+ ((72*_height)/2)) << " translate\n";
         v->generatePostScript(os);
@@ -243,13 +243,21 @@ std::shared_ptr<Shape> makeSpecial(double height) {return std::make_shared<Speci
 /**********************utility functions**********************/
 void newPage(std::ostream &os, double x, double y){
     os << "%! \n" << "\ngsave \n" << (int)(72*x) << " " << (int)(72*y) << " translate\n";
-    return;
 }
 void movePosition(std::ostream &os, double x, double y){
     os << "\n grestore \ngsave \n" << (int)(72*x) << " " << (int)(72*y) << " translate\n";
-    return;
 }
 void endPage(std::ostream &os){
     os << "\n grestore \nshowpage \n\n\n";
-    return;
+}
+
+/******* new to HW7 *******/
+void MultipleShapes::generatePostScript(std::ostream &os) const {
+    int shift = 0;
+    for(auto i = 0; i < _shapes.size(); ++i){
+        os << "\ngsave\n";
+        shift = reposObj(os, i, shift);
+        _shapes[i]->generatePostScript(os);
+        os << "\ngrestore\n";
+    }
 }
